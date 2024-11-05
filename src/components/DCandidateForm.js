@@ -1,25 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Grid, TextField, withStyles, FormControl, InputLabel, Select, MenuItem, Button, FormHelperText } from "@material-ui/core";
-import useForm from "./useForm";
+import {
+    TextField,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Button,
+    FormHelperText,
+    Box,
+    FormLabel
+} from "@mui/material";
 import { connect } from "react-redux";
 import * as actions from "../actions/dCandidate";
-import { useToasts } from "react-toast-notifications";
-
-const styles = theme => ({
-    root: {
-        '& .MuiTextField-root': {
-            margin: theme.spacing(1),
-            minWidth: 230,
-        }
-    },
-    formControl: {
-        margin: theme.spacing(1),
-        minWidth: 230,
-    },
-    smMargin: {
-        margin: theme.spacing(1)
-    }
-})
+import { styled } from '@mui/material/styles';
+import { toast } from "react-toastify";
+import useForm from "./useForm";
 
 const initialFieldValues = {
     fullname: '',
@@ -30,13 +25,9 @@ const initialFieldValues = {
     address: ''
 }
 
-const DCandidateForm = ({ classes, ...props }) => {
 
-    // toast msg.
-    const {addToast} = useToasts();
 
-    //validate()
-    //validate({fullname:'jenny'})
+const DCandidateForm = (props) => {
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
         if ('fullname' in fieldValues)
@@ -64,9 +55,9 @@ const DCandidateForm = ({ classes, ...props }) => {
         resetForm
     } = useForm(initialFieldValues, validate, props.setCurrentId)
 
-    //material-ui select
     const inputLabel = React.useRef(null);
     const [labelWidth, setLabelWidth] = React.useState(0);
+
     React.useEffect(() => {
         setLabelWidth(inputLabel.current.offsetWidth);
     }, []);
@@ -76,7 +67,7 @@ const DCandidateForm = ({ classes, ...props }) => {
         if (validate()) {
             const onSuccess = () => {
                 resetForm()
-                addToast("Submitted successfully",{ appearance: 'success'})
+                toast.success("Submitted successfully");
             }
             if (props.currentId === 0)
                 props.createDCandidate(values, onSuccess)
@@ -92,12 +83,12 @@ const DCandidateForm = ({ classes, ...props }) => {
             })
             setErrors({})
         }
-    }, [props.currentId])
+    }, [props.currentId]);
 
     return (
-        <form autoComplete="off" noValidate className={classes.root} onSubmit={handleSubmit}>
-            <Grid container>
-                <Grid item xs={6}>
+        <form autoComplete="off" noValidate onSubmit={handleSubmit}>
+            <Box display="flex" flexDirection="row" flexWrap="wrap">
+                <Box width="50%" padding={1}>
                     <TextField
                         name="fullname"
                         variant="outlined"
@@ -105,6 +96,8 @@ const DCandidateForm = ({ classes, ...props }) => {
                         value={values.fullname}
                         onChange={handleInputChange}
                         {...(errors.fullname && { error: true, helperText: errors.fullname })}
+                        fullWidth
+                        sx={{ mb: 2 }}
                     />
                     <TextField
                         name="email"
@@ -113,13 +106,13 @@ const DCandidateForm = ({ classes, ...props }) => {
                         value={values.email}
                         onChange={handleInputChange}
                         {...(errors.email && { error: true, helperText: errors.email })}
+                        fullWidth
+                        sx={{ mb: 2 }}
                     />
-                    <FormControl variant="outlined"
-                        className={classes.formControl}
-                        {...(errors.bloodGroup && { error: true })}
-                    >
-                        <InputLabel ref={inputLabel}>Blood Group</InputLabel>
+                    <FormControl variant="outlined" fullWidth {...(errors.bloodGroup && { error: true })}>
+                        <InputLabel ref={inputLabel} shrink>Blood Group</InputLabel>
                         <Select
+                            id="blood-group"
                             name="bloodGroup"
                             value={values.bloodGroup}
                             onChange={handleInputChange}
@@ -137,9 +130,8 @@ const DCandidateForm = ({ classes, ...props }) => {
                         </Select>
                         {errors.bloodGroup && <FormHelperText>{errors.bloodGroup}</FormHelperText>}
                     </FormControl>
-                </Grid>
-                <Grid item xs={6}>
-
+                </Box>
+                <Box width="50%" padding={1}>
                     <TextField
                         name="mobile"
                         variant="outlined"
@@ -147,6 +139,8 @@ const DCandidateForm = ({ classes, ...props }) => {
                         value={values.mobile}
                         onChange={handleInputChange}
                         {...(errors.mobile && { error: true, helperText: errors.mobile })}
+                        fullWidth
+                        sx={{ mb: 2 }}
                     />
                     <TextField
                         name="age"
@@ -154,6 +148,8 @@ const DCandidateForm = ({ classes, ...props }) => {
                         label="Age"
                         value={values.age}
                         onChange={handleInputChange}
+                        fullWidth
+                        sx={{ mb: 2 }}
                     />
                     <TextField
                         name="address"
@@ -161,30 +157,29 @@ const DCandidateForm = ({ classes, ...props }) => {
                         label="Address"
                         value={values.address}
                         onChange={handleInputChange}
+                        fullWidth
+                        sx={{ mb: 2 }}
                     />
-                    <div>
+                    <Box display="flex" justifyContent="space-between" marginTop={2}>
                         <Button
                             variant="contained"
                             color="primary"
                             type="submit"
-                            className={classes.smMargin}
                         >
                             Submit
                         </Button>
                         <Button
                             variant="contained"
-                            className={classes.smMargin}
                             onClick={resetForm}
                         >
                             Reset
                         </Button>
-                    </div>
-                </Grid>
-            </Grid>
+                    </Box>
+                </Box>
+            </Box>
         </form>
     );
 }
-
 
 const mapStateToProps = state => ({
     dCandidateList: state.dCandidate.list
@@ -195,4 +190,4 @@ const mapActionToProps = {
     updateDCandidate: actions.update
 }
 
-export default connect(mapStateToProps, mapActionToProps)(withStyles(styles)(DCandidateForm));
+export default connect(mapStateToProps, mapActionToProps)(DCandidateForm);

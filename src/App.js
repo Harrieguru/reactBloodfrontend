@@ -4,19 +4,19 @@ import { store } from './actions/store';
 import { Provider } from 'react-redux';
 import DCandidateForm from './components/DCandidateForm';
 import DCandidates from './components/DCandidates';
-import { Container } from '@material-ui/core';
-import { ToastProvider } from "react-toast-notifications"
+import { Container } from '@mui/material';
+import { ToastContainer } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
 function App() {
   return (
     <Provider store={store}>
-          <ToastProvider autoDismiss={true}>
             <Container maxWidth="lg">
               <DCandidates />
             </Container>
-          </ToastProvider>
+            <ToastContainer autoClose={3000} position='top-right'/>
     </Provider>
   );
 }

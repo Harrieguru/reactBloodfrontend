@@ -2,7 +2,8 @@ import axios from "axios";
 import { dCandidate } from "../reducers/dCandidate";
 import { fetchAll } from "./dCandidate";
 
-const baseURL = "http://35.160.120.126/api"
+// const baseURL = "http://35.160.120.126/api"
+const baseURL = "http://localhost:30193/api/"
 
 export default {
 
