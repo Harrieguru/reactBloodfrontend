@@ -22,8 +22,9 @@ export default {
     //         delete: (id) => axios.delete(url + id)
     //     }
     // }
-    // production
 
+
+    // production
     dCandidate(url=apiURL +'/api/' + 'DCandidate/'){
         return{
             fetchAll: () => axios.get(url),
